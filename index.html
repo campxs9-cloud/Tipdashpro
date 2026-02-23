@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>TipDash Pro | Panel de Control</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --bg-dark: #000000;
+
+            --card-bg: rgba(25, 25, 30, 0.6);
+
+            --pink-accent: #EF27A6;
+
+            --green-accent: #27EF6A;
+
+            --yellow-card: #F5FF00; 
+
+        }
+
+        body {
+
+            font-family: 'Geist Sans', system-ui, sans-serif;
+
+            background-color: var(--bg-dark);
+
+            color: #ffffff;
+
+            -webkit-tap-highlight-color: transparent;
+
+            min-height: 100vh;
+
+        }
+
+        .glass {
+
+            background: var(--card-bg);
+
+            backdrop-filter: blur(20px);
+
+            -webkit-backdrop-filter: blur(20px);
+
+            border: 2px solid rgba(255, 255, 255, 0.08);
+
+        }
+
+        .text-topic { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
+
+        .text-subtopic { font-size: 1rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); }
+
+        .text-data { font-size: 1.875rem; font-weight: 600; }
+
+        .text-small { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em; }
+
+        
+
+        .interactive-element {
+
+            border: 2px solid rgba(255, 255, 255, 0.1);
+
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        }
+
+        .input-neutral:focus {
+
+            border-color: #ffffff !important;
+
+            outline: none;
+
+        }
+
+        .method-active-yellow { 
+
+            background-color: var(--yellow-card) !important; 
+
+            color: #000000 !important; 
+
+            font-weight: 700;
+
+            border-color: var(--yellow-card) !important;
+
+        }
+
+        .method-active-green { 
+
+            background-color: var(--green-accent) !important; 
+
+            color: #000000 !important; 
+
+            font-weight: 700;
+
+            border-color: var(--green-accent) !important;
+
+        }
+
+        
+
+        .btn-active-green {
+
+            background-color: var(--green-accent) !important;
+
+            color: #000000 !important;
+
+            border-color: var(--green-accent) !important;
+
+            font-weight: 700;
+
+        }
+
+        .tip-container-active, #tip-container:focus-within {
+
+            border-color: var(--green-accent) !important;
+
+        }
+
+        .blur-amount { filter: blur(12px); transition: filter 0.3s ease; pointer-events: none; }
+
+        input { font-variant-numeric: tabular-nums; }
+
+        .logo-container { filter: drop-shadow(0 0 10px rgba(39, 239, 106, 0.2)); }
+
+    </style>
+
+</head>
+
+<body class="p-5">
+
+    <header class="max-w-md mx-auto mb-8 pt-4">
+
+        <div class="flex items-center gap-4">
+
+            <div class="logo-container bg-white/5 p-2.5 rounded-2xl border-2 border-white/10">
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                    <path d="M13 3L21 11M13 13L21 21" stroke="#27EF6A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+                    <path d="M3 12H13" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <path d="M3 6H8" stroke="white" stroke-opacity="0.4" stroke-width="2.5" stroke-linecap="round"/>
+
+                </svg>
+
+            </div>
+
+            <div>
+
+                <p class="text-[0.6rem] text-[#27EF6A] uppercase font-bold tracking-[0.2em] leading-none mb-1.5">Status: Operando</p>
+
+                <h1 class="text-topic text-white leading-none">TipDash <span class="font-light opacity-60">PRO</span></h1>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="max-w-md mx-auto space-y-6">
+
+        <section class="glass p-7 rounded-[2.5rem] shadow-2xl">
+
+            <div class="mb-6">
+
+                <label class="block text-subtopic text-center mb-3">Monto total de la Cuenta</label>
+
+                <input type="text" id="bill-amount" inputmode="decimal" placeholder="$0.00" 
+
+                    class="interactive-element input-neutral w-full bg-black/60 rounded-2xl p-5 text-data text-center text-white focus:outline-none">
+
+            </div>
+
+            <div class="flex gap-4 mb-6">
+
+                <button id="method-card" onclick="setMethod('Tarjeta')" 
+
+                    class="interactive-element flex-1 py-4 rounded-2xl text-sm font-semibold text-white/40 active:scale-95">
+
+                    TARJETA
+
+                </button>
+
+                <button id="method-cash" onclick="setMethod('Efectivo')" 
+
+                    class="interactive-element flex-1 py-4 rounded-2xl text-sm font-semibold text-white/40 active:scale-95">
+
+                    EFECTIVO
+
+                </button>
+
+            </div>
+
+            <div id="tip-container" class="interactive-element bg-black/60 rounded-2xl mb-6 cursor-text transition-all">
+
+                <label for="tip-amount" class="flex items-center px-5 py-4 w-full cursor-text">
+
+                    <span class="text-subtopic !text-[#27EF6A] font-bold whitespace-nowrap mr-4">PROPINA:</span>
+
+                    <input type="text" id="tip-amount" inputmode="decimal" class="bg-transparent text-right text-data text-[#27EF6A] focus:outline-none w-full" value="$0.00">
+
+                </label>
+
+            </div>
+
+            
+
+            <div class="grid grid-cols-4 gap-3 mb-8">
+
+                <button onclick="setTipPercent(5, this)" class="interactive-element py-4 rounded-2xl text-base font-bold text-white/40 active:scale-90">5%</button>
+
+                <button onclick="setTipPercent(10, this)" class="interactive-element py-4 rounded-2xl text-base font-bold text-white/40 active:scale-90">10%</button>
+
+                <button onclick="setTipPercent(15, this)" class="interactive-element py-4 rounded-2xl text-base font-bold text-white/40 active:scale-90">15%</button>
+
+                <button onclick="setTipPercent(20, this)" class="interactive-element py-4 rounded-2xl text-base font-bold text-white/40 active:scale-90">20%</button>
+
+            </div>
+
+            
+
+            <button onclick="saveTransaction()" class="w-full bg-white text-black text-base font-semibold py-5 rounded-2xl shadow-xl active:scale-[0.97] uppercase tracking-widest">
+
+                Registrar
+
+            </button>
+
+        </section>
+
+        <section class="pb-24">
+
+            <div class="flex items-center justify-between mb-5 px-2">
+
+                <h3 class="text-subtopic uppercase tracking-widest">Historial</h3>
+
+                <div class="flex items-center bg-white/5 rounded-full border-2 border-white/10 p-1">
+
+                    <span id="stat-count" class="text-small px-3 text-white border-r border-white/10">0 Registros</span>
+
+                    <button onclick="togglePrivacy()" id="privacy-btn" class="px-2 text-white/40 active:scale-90">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+
+                        </svg>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            
+
+            <div id="history-list" class="space-y-4 mb-10"></div>
+
+            
+
+            <div id="summary-footer" class="glass rounded-[2.5rem] p-8 shadow-2xl">
+
+                <div class="text-center mb-8">
+
+                    <h4 class="text-subtopic uppercase tracking-[0.2em] mb-2">TOTAL DE VENTA</h4>
+
+                    <p id="stat-sales" class="text-data text-white">$0.00</p>
+
+                </div>
+
+                <div class="grid grid-cols-2 gap-5 mb-8">
+
+                    <div class="bg-white/5 p-5 rounded-3xl border-2 border-white/5">
+
+                        <p class="text-[0.65rem] text-white/50 uppercase font-bold tracking-wider mb-1">Propina en</p>
+
+                        <p class="text-small text-[#F5FF00] uppercase mb-2">Tarjeta</p>
+
+                        <p id="sum-card-tips" class="text-2xl font-semibold text-white">$0</p>
+
+                    </div>
+
+                    <div class="bg-white/5 p-5 rounded-3xl border-2 border-white/5">
+
+                        <p class="text-[0.65rem] text-white/50 uppercase font-bold tracking-wider mb-1">Propina en</p>
+
+                        <p class="text-small text-[#27EF6A] uppercase mb-2">Efectivo</p>
+
+                        <p id="sum-cash-tips" class="text-2xl font-semibold text-white">$0</p>
+
+                    </div>
+
+                </div>
+
+                <div class="space-y-4">
+
+                    <div class="flex justify-between items-center bg-[#27EF6A]/5 p-6 rounded-2xl border-2 border-[#27EF6A]">
+
+                        <span class="text-subtopic text-white">Total de propina</span>
+
+                        <span id="stat-total" class="text-xl font-semibold text-[#27EF6A]">$0.00</span>
+
+                    </div>
+
+                    <div class="flex justify-between items-center bg-[#EF27A6]/5 p-6 rounded-2xl border-2 border-[#EF27A6]">
+
+                        <span class="text-subtopic text-white">Total de moche (5%)</span>
+
+                        <span id="stat-tipout" class="text-xl font-semibold text-[#EF27A6]">$0.00</span>
+
+                    </div>
+
+                </div>
+
+                <button onclick="resetDay()" class="w-full mt-8 text-small text-red-500 uppercase tracking-widest hover:text-red-500 transition-colors">
+
+                    Reiniciar Turno
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        let currentTipPercent = 0; 
+
+        let currentMethod = null;
+
+        let isPrivate = false;
+
+        let history = JSON.parse(localStorage.getItem('tipHistory_v2')) || [];
+
+        
+
+        const billInput = document.getElementById('bill-amount');
+
+        const tipInput = document.getElementById('tip-amount');
+
+        const tipContainer = document.getElementById('tip-container');
+
+        
+
+        function parseLocaleNumber(str) { return parseFloat(str.toString().replace(/[$,]/g, '')) || 0; }
+
+        
+
+        function formatInputWithCurrency(input) {
+
+            let value = input.value.replace(/[$,]/g, '');
+
+            if (value === "") { input.value = ""; return; }
+
+            let parts = value.split('.');
+
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            input.value = "$" + parts.join('.');
+
+        }
+
+        function updateTipBorder() {
+
+            const val = parseLocaleNumber(tipInput.value);
+
+            if (val > 0) {
+
+                tipContainer.classList.add('tip-container-active');
+
+            } else {
+
+                tipContainer.classList.remove('tip-container-active');
+
+            }
+
+        }
+
+        [billInput, tipInput].forEach(input => {
+
+            input.addEventListener('focus', function() { if (parseLocaleNumber(this.value) === 0) this.value = ""; });
+
+            input.addEventListener('blur', function() {
+
+                if (this.value === "" || this.value === "$") this.value = "$0.00";
+
+                updateTipBorder();
+
+            });
+
+        });
+
+        billInput.addEventListener('input', (e) => { formatInputWithCurrency(e.target); calculateValues(); });
+
+        tipInput.addEventListener('input', (e) => {
+
+            formatInputWithCurrency(e.target);
+
+            document.querySelectorAll('button[onclick^="setTipPercent"]').forEach(b => b.classList.remove('btn-active-green'));
+
+            currentTipPercent = 0;
+
+            updateTipBorder();
+
+        });
+
+        function calculateValues() {
+
+            const bill = parseLocaleNumber(billInput.value);
+
+            if (currentTipPercent > 0) {
+
+                const tip = (bill * currentTipPercent) / 100;
+
+                tipInput.value = "$" + formatCurrency(tip);
+
+                updateTipBorder();
+
+            }
+
+        }
+
+        function setTipPercent(p, btn) {
+
+            currentTipPercent = (currentTipPercent === p) ? 0 : p;
+
+            document.querySelectorAll('button[onclick^="setTipPercent"]').forEach(b => {
+
+                b.classList.remove('btn-active-green');
+
+            });
+
+            if (currentTipPercent !== 0) {
+
+                btn.classList.add('btn-active-green');
+
+            } else {
+
+                tipInput.value = "$0.00";
+
+                updateTipBorder();
+
+            }
+
+            calculateValues();
+
+        }
+
+        function formatCurrency(val) {
+
+            return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
+
+        }
+
+        function setMethod(m) {
+
+            const cashBtn = document.getElementById('method-cash');
+
+            const cardBtn = document.getElementById('method-card');
+
+            if (currentMethod === m) { currentMethod = null; } else { currentMethod = m; }
+
+            
+
+            [cashBtn, cardBtn].forEach(btn => btn.className = "interactive-element flex-1 py-4 rounded-2xl text-sm font-semibold text-white/40 active:scale-95");
+
+            if(currentMethod === 'Efectivo') cashBtn.classList.add('method-active-green');
+
+            else if (currentMethod === 'Tarjeta') cardBtn.classList.add('method-active-yellow');
+
+        }
+
+        function togglePrivacy() {
+
+            isPrivate = !isPrivate;
+
+            const ids = ['stat-sales', 'stat-total', 'stat-tipout', 'sum-cash-tips', 'sum-card-tips'];
+
+            ids.forEach(id => document.getElementById(id).classList.toggle('blur-amount', isPrivate));
+
+            document.querySelectorAll('.history-blur').forEach(el => el.classList.toggle('blur-amount', isPrivate));
+
+            document.getElementById('privacy-btn').classList.toggle('text-[#EF27A6]', isPrivate);
+
+        }
+
+        function resetDay() { if(confirm('¿Estas seguro de reiniciar todo el turno?')) { history = []; localStorage.removeItem('tipHistory_v2'); updateUI(); updateTipBorder(); } }
+
+        function saveTransaction() {
+
+            if (!currentMethod) { alert("Por favor, ingresa los datos antes de registrar."); return; }
+
+            const bill = parseLocaleNumber(billInput.value);
+
+            const tip = parseLocaleNumber(tipInput.value);
+
+            if (bill === 0 && tip === 0) return;
+
+            history.unshift({
+
+                id: Date.now(), bill, tip, tipOut: bill * 0.05, 
+
+                method: currentMethod,
+
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
+            });
+
+            localStorage.setItem('tipHistory_v2', JSON.stringify(history));
+
+            billInput.value = '$0.00'; tipInput.value = '$0.00'; currentMethod = null;
+
+            setMethod(null); setTipPercent(0); updateUI(); updateTipBorder();
+
+        }
+
+        function deleteEntry(id) {
+
+            history = history.filter(item => item.id !== id);
+
+            localStorage.setItem('tipHistory_v2', JSON.stringify(history));
+
+            updateUI();
+
+        }
+
+        function updateUI() {
+
+            const list = document.getElementById('history-list');
+
+            list.innerHTML = '';
+
+            let t = { tips: 0, out: 0, s: 0, ct: 0, rt: 0 };
+
+            
+
+            history.forEach(item => {
+
+                t.tips += item.tip; t.out += item.tipOut; t.s += item.bill;
+
+                if(item.method === 'Efectivo') t.ct += item.tip; else t.rt += item.tip;
+
+                
+
+                const div = document.createElement('div');
+
+                div.className = 'glass p-5 rounded-3xl flex justify-between items-center';
+
+                const blurClass = isPrivate ? 'blur-amount' : '';
+
+                
+
+                // Lógica de color rojo para propina 0
+
+                const tipColorClass = item.tip === 0 ? 'text-red-500' : 'text-white';
+
+                
+
+                div.innerHTML = `
+
+                    <div class="flex items-center gap-5">
+
+                        <div>
+
+                            <div class="flex items-center gap-3">
+
+                                <p class="text-xl font-semibold history-blur ${tipColorClass} ${blurClass}">$${formatCurrency(item.tip)}</p>
+
+                                <span class="text-small font-bold ${item.method === 'Tarjeta' ? 'text-[#F5FF00]' : 'text-[#27EF6A]'} uppercase">${item.method}</span>
+
+                            </div>
+
+                            <p class="text-small text-white/50"><span class="history-blur ${blurClass}">${item.bill > 0 ? '$' + formatCurrency(item.bill) : 'Propina'}</span> • ${item.time}</p>
+
+                        </div>
+
+                    </div>
+
+                    <button onclick="deleteEntry(${item.id})" class="text-white/20 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>`;
+
+                list.appendChild(div);
+
+            });
+
+            document.getElementById('stat-total').innerText = `$${formatCurrency(t.tips)}`;
+
+            document.getElementById('stat-tipout').innerText = `$${formatCurrency(t.out)}`;
+
+            document.getElementById('stat-count').innerText = `${history.length} Registros`;
+
+            document.getElementById('stat-sales').innerText = `$${formatCurrency(t.s)}`;
+
+            document.getElementById('sum-cash-tips').innerText = `$${formatCurrency(t.ct)}`;
+
+            document.getElementById('sum-card-tips').innerText = `$${formatCurrency(t.rt)}`;
+
+        }
+
+        updateUI();
+
+    </script>
+
+</body>
+
+</html>
